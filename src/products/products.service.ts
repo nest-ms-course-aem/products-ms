@@ -23,12 +23,19 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
   async findAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
 
-    const totalProducts = await this.product.count();
+    const totalProducts = await this.product.count({
+      where: {
+        available: true
+      }
+    });
     const lastPage = Math.ceil(totalProducts / limit);
 
 
     return {
       data: await this.product.findMany({
+        where: {
+          available: true,
+        },
         skip: (page - 1) * limit,
         take: limit,
       }),
@@ -43,7 +50,8 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
   async findOne(id: number) {
     const product = await this.product.findUnique({
       where: {
-        id
+        id,
+        available: true,
       }
     });
 
@@ -55,24 +63,34 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
+
+    const {id: __, ...rest} = updateProductDto;
+
     await this.findOne(id); 
 
     return this.product.update({
       where: {
         id
       },
-      data: {
-         ...updateProductDto
-      }
+      data: rest,
     });
   }
 
   async remove(id: number) { //Hard delete this not recommended. 
     await this.findOne(id); 
 
-    return this.product.delete({
+    // return this.product.delete({
+    //   where: {
+    //     id
+    //   }
+    // })
+
+    return this.product.update({
       where: {
         id
+      },
+      data: {
+        available: false, // You do not need to send all the information just the one that you need to update the record on the db
       }
     })
   }
