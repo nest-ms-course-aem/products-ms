@@ -3,6 +3,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaClient } from '@prisma/client';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class ProductsService extends PrismaClient implements OnModuleInit {
@@ -56,7 +57,7 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
     });
 
     if(!product){
-      throw new NotFoundException(`Product with id: ${id} was not found`);
+      throw new RpcException(`Product with id: ${id} was not found`); //Makes that only the error controlled return to the client gateway
     }
 
     return product;
