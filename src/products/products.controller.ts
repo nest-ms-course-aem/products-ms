@@ -13,7 +13,7 @@ export class ProductsController {
   @MessagePattern({ cmd: 'createProduct' })
   // create(@Body() createProductDto: CreateProductDto) { Using tcp we use @Payload instead of @Body
   create(@Payload() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+      return this.productsService.create(createProductDto);
   }
 
   // @Get()
