@@ -15,9 +15,9 @@ export class ProductsController {
   create(@Payload() createProductDto: CreateProductDto) {
       return this.productsService.create(createProductDto);
   }
-
+ 
   // @Get()
-  @MessagePattern({ cmd: 'findAllProducts' })
+  @MessagePattern({ cmd: 'findAllProducts' }) 
   findAll(
     // @Query('page', ParseIntPipe) page: number,
     // @Query('limit', ParseIntPipe) limit: number
